@@ -1,15 +1,10 @@
-import express from 'express';
-import cors from 'cors';
+import _express from 'express';
+import _cors from 'cors';
+import {app} from './app';
 
-const app = express();
+const PORT = process.env.PORT || 3000
 
-app.use(cors());
-app.use(express.json());
+app.listen(PORT, () =>{
+  console.log(`API rodando na porta ${PORT}`)
+})
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
-
-app.listen(3333, () => {
-  console.log('API rodando em http://localhost:3333');
-});
