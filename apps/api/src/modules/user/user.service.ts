@@ -1,8 +1,16 @@
 import { userRepository } from "./user.repository";
+import bcrypt from "bcrypt";
 
 export const userService = {
+
     createUser: async (data:{name:string; email: string; password:string})=> {
-        return userRepository.create(data)
+
+        const hashedPassword = await bcrypt.hash(data.password, 10)
+
+        return userRepository.create({
+            ...data,
+            password: hashedPassword
+        })
     },
 
     listUsers: async() => {
