@@ -9,23 +9,21 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ message: "Token missing" });
+    return res.status(401).json({ message: "Acess denied: Token missing" });
   }
 
-  const parts = authHeader.split(" ");
-
-  if (parts.length < 2) {
-    return res.status(401).json({ message: "Token error" });
-  }
-
-  const token= parts[1] as string;
+  const token = authHeader.split(" ")[1] as string
 
   try {
-    const decoded = jwt.verify(token, "secret");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET|| "secret");
     (req as any).user = decoded;
 
-    return next();
-  } catch {
-    return res.status(401).json({ message: "Invalid token" });
+    next();
+
+  } catch (err: any) {
+    if(err.name==="TokenExpiredError"){
+      return res.status(401).json({ message: "Acess denied: Token expired"})
+    }
+    return res.status(401).json({ message: "Acess denied: Invalid token" });
   }
 };

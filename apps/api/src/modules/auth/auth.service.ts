@@ -22,7 +22,7 @@ export const authService = {
         const token = jwt.sign(
             { userId: user.id},
             "secret",
-            { expiresIn : "1d"}
+            { expiresIn : "4s"}
         )
 
     return {token}
